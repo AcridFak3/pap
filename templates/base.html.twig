@@ -1,17 +1,66 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Welcome!{% endblock %}</title>
 
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+    <!-- Ícone da aba -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+
+    <!-- Webpack Encore Assets -->
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+
+    <!-- Scripts -->
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+</head>
+<body class="bg-gradient-to-r from-purple-400 via-indigo-500 to-blue-600 text-gray-900">
+<header class="bg-gray-800 text-white p-4 shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+
+        <div class="flex items-center space-x-4">
+            <img src="{{ asset('build/images/logo.ce489ad6.png') }}" alt="Description of image" class="w-16 h-16 rounded-full object-cover">
+            <a href="{{ path('app_homepage') }}" class="text-xl font-semibold text-white">Easy Ticket</a>
+        </div>
+
+        <div class="flex space-x-4">
+            {% if app.request.attributes.get('_route') != 'app_homepage' %}
+            <a href="{{ path('app_homepage') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                Home
+            </a>
+            {% endif %}
+
+            {% if app.user %}
+                <a href="{{ path('app_logout') }}" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">
+                    Logout
+                </a>
+            {% else %}
+                {% if app.request.attributes.get('_route') != 'app_login' %}
+                <a href="{{ path('app_login') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                    Login
+                </a>
+                    {% endif %}
+            {% if app.request.attributes.get('_route') != 'app_register' %}
+                <a href="{{ path('app_register') }}" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
+                    Register
+                </a>
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+
+<main class="min-h-screen w-full bg-gradient-to-r from-purple-400 via-indigo-500 to-blue-600">
+    {% block body %}{% endblock %}
+</main>
+
+<footer class="bg-gray-800 text-white text-center p-4 mt-6">
+    <p>&copy; {{ "now"|date("Y") }} Meu Sistema de Tickets. Todos os direitos reservados.</p>
+</footer>
+</body>
 </html>

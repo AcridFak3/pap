@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create Ticket{% endblock %}
+
+{% block body %}
+    <div class="min-h-screen bg-gradient-to-r from-purple-400 via-indigo-500 to-blue-600 flex justify-center items-center">
+        <div class="w-full max-w-lg bg-white rounded-lg shadow-lg p-8">
+            <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Create New Ticket</h1>
+
+            {{ form_start(form) }}
+
+            <div class="mb-4">
+                {{ form_row(form.title, {
+                    'attr': {'class': 'w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'}
+                }) }}
+            </div>
+
+            <div class="mb-4">
+                {{ form_row(form.description, {
+                    'attr': {'class': 'w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'}
+                }) }}
+            </div>
+
+            <div class="flex justify-center">
+                <button type="submit" class="bg-blue-500 text-white px-8 py-3 rounded-lg hover:bg-blue-600 transition duration-300">
+                    Create Ticket
+                </button>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
