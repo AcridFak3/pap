@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+    <div class="min-h-screen bg-gradient-to-r from-purple-400 via-indigo-500 to-blue-600 flex items-center justify-center">
+        <div class="w-full max-w-lg bg-white p-8 rounded-lg shadow-lg">
+
+            {% for flash_error in app.flashes('verify_email_error') %}
+                <div class="alert alert-danger mb-4 p-3 text-red-700 bg-red-100 border border-red-400 rounded">
+                    {{ flash_error }}
+                </div>
+            {% endfor %}
+
+            <h1 class="text-2xl font-bold text-center text-blue-600 mb-6">Register</h1>
+
+            {{ form_errors(registrationForm) }}
+
+            {{ form_start(registrationForm) }}
+            <div class="mb-4">
+                {{ form_row(registrationForm.username, {
+                    'attr': {'class': 'w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'}
+                }) }}
+            </div>
+            <div class="mb-4">
+                {{ form_row(registrationForm.fullname, {
+                    'attr': {'class': 'w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'}
+                }) }}
+            </div>
+            <div class="mb-4">
+                {{ form_row(registrationForm.email, {
+                    'attr': {'class': 'w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'}
+                }) }}
+            </div>
+            <div class="mb-4">
+                {{ form_row(registrationForm.plainPassword, {
+                    label: 'Password',
+                    'attr': {'class': 'w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'}
+                }) }}
+            </div>
+            <div class="mb-4">
+                {{ form_row(registrationForm.agreeTerms, {
+                    'attr': {'class': 'h-5 w-5 text-blue-600'}
+                }) }}
+            </div>
+
+            <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition">
+                Register
+            </button>
+            {{ form_end(registrationForm) }}
+        </div>
+    </div>
+{% endblock %}
