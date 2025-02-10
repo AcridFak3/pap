@@ -57,9 +57,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Ticket::class, mappedBy: 'userId')]
     private Collection $tickets;
 
+    /**
+     * @var Collection<int, Comment>
+     */
+    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'userId')]
+    private Collection $comments;
+
+    /**
+     * @var Collection<int, TicketLog>
+     */
+    #[ORM\OneToMany(targetEntity: TicketLog::class, mappedBy: 'user')]
+    private Collection $ticketLogs;
+
     public function __construct()
     {
         $this->tickets = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+        $this->ticketLogs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -220,6 +234,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($ticket->getUserId() === $this) {
                 $ticket->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comment>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): static
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): static
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getUserId() === $this) {
+                $comment->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TicketLog>
+     */
+    public function getTicketLogs(): Collection
+    {
+        return $this->ticketLogs;
+    }
+
+    public function addTicketLog(TicketLog $ticketLog): static
+    {
+        if (!$this->ticketLogs->contains($ticketLog)) {
+            $this->ticketLogs->add($ticketLog);
+            $ticketLog->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTicketLog(TicketLog $ticketLog): static
+    {
+        if ($this->ticketLogs->removeElement($ticketLog)) {
+            // set the owning side to null (unless already changed)
+            if ($ticketLog->getUser() === $this) {
+                $ticketLog->setUser(null);
             }
         }
 

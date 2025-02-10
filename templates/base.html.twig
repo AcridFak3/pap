@@ -12,13 +12,9 @@
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
     {% endblock %}
-
-    <!-- Scripts -->
-    {% block javascripts %}
-        {{ encore_entry_script_tags('app') }}
-    {% endblock %}
 </head>
-<body class="bg-gradient-to-r from-purple-400 via-indigo-500 to-blue-600 text-gray-900">
+<body>
+
 <header class="bg-gray-800 text-white p-4 shadow-md">
     <div class="container mx-auto flex justify-between items-center">
 
@@ -27,28 +23,37 @@
             <a href="{{ path('app_homepage') }}" class="text-xl font-semibold text-white">Easy Ticket</a>
         </div>
 
-        <div class="flex space-x-4">
+        <div class="flex space-x-4 relative">
             {% if app.request.attributes.get('_route') != 'app_homepage' %}
-            <a href="{{ path('app_homepage') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
-                Home
-            </a>
+                <a href="{{ path('app_homepage') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                    Home
+                </a>
             {% endif %}
 
             {% if app.user %}
-                <a href="{{ path('app_logout') }}" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">
-                    Logout
-                </a>
+                <div class="relative group">
+                    <button class="bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center">
+                        {{ app.user.username }}
+                        <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div class="absolute right-0 w-40 bg-white text-gray-900 shadow-lg rounded-lg hidden group-hover:block">
+                        <a href="{{ path('app_profile') }}" class="block px-4 py-2 hover:bg-gray-200">Profile</a>
+                        <a href="{{ path('app_logout') }}" class="block px-4 py-2 hover:bg-red-500 hover:text-white">Logout</a>
+                    </div>
+                </div>
             {% else %}
                 {% if app.request.attributes.get('_route') != 'app_login' %}
-                <a href="{{ path('app_login') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
-                    Login
-                </a>
-                    {% endif %}
-            {% if app.request.attributes.get('_route') != 'app_register' %}
-                <a href="{{ path('app_register') }}" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
-                    Register
-                </a>
-            {% endif %}
+                    <a href="{{ path('app_login') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                        Login
+                    </a>
+                {% endif %}
+                {% if app.request.attributes.get('_route') != 'app_register' %}
+                    <a href="{{ path('app_register') }}" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
+                        Register
+                    </a>
+                {% endif %}
             {% endif %}
         </div>
     </div>
@@ -59,8 +64,14 @@
     {% block body %}{% endblock %}
 </main>
 
-<footer class="bg-gray-800 text-white text-center p-4 mt-6">
+<footer class="bg-gray-800 text-white text-center p-4">
     <p>&copy; {{ "now"|date("Y") }} Meu Sistema de Tickets. Todos os direitos reservados.</p>
 </footer>
+
+<!-- Scripts -->
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
+
 </body>
 </html>

@@ -1,8 +1,57 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="container mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
-        <h1 class="text-3xl font-bold text-center text-blue-600">Bem-vindo ao Sistema de Tickets</h1>
-        <p class="text-gray-700 text-center mt-4">Gerencie seus tickets de forma eficiente e rápida.</p>
+    <div class="container mx-auto mt-10 p-8 bg-white shadow-lg rounded-lg text-center">
+        <h1 class="text-4xl font-extrabold text-blue-600">Why Choose Our Ticketing System?</h1>
+        <p class="text-gray-700 mt-4 text-lg">The ultimate solution for seamless and efficient ticket management, designed for growing businesses.</p>
     </div>
+
+    <div class="container mx-auto mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="p-6 bg-blue-100 rounded-lg shadow-md flex flex-col items-center">
+            <img src="/images/integration.svg" alt="Easy Integration" class="mb-4 w-20 h-20">
+            <h2 class="text-xl font-semibold text-blue-600">Easy Integration</h2>
+            <p class="text-gray-600 text-center mt-2">Seamlessly embed our system into your platform with just an iframe.</p>
+        </div>
+
+        <div class="p-6 bg-blue-100 rounded-lg shadow-md flex flex-col items-center">
+            <img src="/images/management.svg" alt="Intuitive Management" class="mb-4 w-20 h-20">
+            <h2 class="text-xl font-semibold text-blue-600">Intuitive Management</h2>
+            <p class="text-gray-600 text-center mt-2">Create, update, and track tickets effortlessly with our user-friendly interface.</p>
+        </div>
+
+        <div class="p-6 bg-blue-100 rounded-lg shadow-md flex flex-col items-center">
+            <img src="/images/logging.svg" alt="Transparent Logging" class="mb-4 w-20 h-20">
+            <h2 class="text-xl font-semibold text-blue-600">Transparent Logging</h2>
+            <p class="text-gray-600 text-center mt-2">Track every action taken on a ticket to ensure full transparency and accountability.</p>
+        </div>
+    </div>
+
+    <div class="container mx-auto mt-10 p-8 bg-white shadow-lg rounded-lg text-center">
+        <h2 class="text-3xl font-bold text-blue-600">Future Enhancements</h2>
+        <p class="text-gray-700 mt-4 text-lg">We are committed to continuous improvement with powerful new features coming soon.</p>
+    </div>
+
+    <div class="container mx-auto mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="p-6 bg-blue-100 rounded-lg shadow-md flex flex-col items-center">
+            <img src="/images/api.svg" alt="API Integration" class="mb-4 w-20 h-20">
+            <h2 class="text-xl font-semibold text-gray-800">API Access</h2>
+            <p class="text-gray-600 text-center mt-2">Integrate our ticketing system with your own applications through our upcoming API.</p>
+        </div>
+
+        <div class="p-6 bg-blue-100 rounded-lg shadow-md flex flex-col items-center">
+            <img src="/images/widget.svg" alt="Custom Widget" class="mb-4 w-20 h-20">
+            <h2 class="text-xl font-semibold text-gray-800">Widget.js</h2>
+            <p class="text-gray-600 text-center mt-2">Allow users to create tickets directly from your website with our lightweight widget.</p>
+        </div>
+
+        <div class="p-6 bg-blue-100 rounded-lg shadow-md flex flex-col items-center">
+            <img src="/images/adaptability.svg" alt="Adaptability" class="mb-4 w-20 h-20">
+            <h2 class="text-xl font-semibold text-gray-800">Highly Adaptable</h2>
+            <p class="text-gray-600 text-center mt-2">Customizable to fit various industries and business needs.</p>
+        </div>
+    </div>
+
+    <!--<div class="container mx-auto mt-16 text-center">
+        <a href="#" class="bg-blue-600 text-white px-6 py-3 rounded-full text-lg font-semibold shadow-md hover:bg-blue-700 transition">Get Started Today</a>
+    </div>-->
 {% endblock %}

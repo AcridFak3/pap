@@ -26,22 +26,19 @@ class TicketType extends AbstractType
             ])
             ->add('status', ChoiceType::class, [
                 'choices' => [
-                    'Pending' => 'P',
-                    'Working' => 'W',
-                    'Finished' => 'F',
+                    'Pending' => 'p',
+                    'Working' => 'w',
+                    'Finished' => 'f',
                 ],
                 'label' => 'Status',
-                'disabled' => true,
             ])
             ->add('priority', ChoiceType::class, [
-
                 'choices' => [
-                    'Low' => 'L',
-                    'Medium' => 'M',
-                    'High' => 'H',
+                    'Low' => 'l',
+                    'Medium' => 'm',
+                    'High' => 'h',
                 ],
                 'label' => 'Priority',
-                'disabled' => true,
             ])
             ->add('createdAt', DateTimeType::class, options: [
                 'label' => 'Created At',

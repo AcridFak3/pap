@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Adicionar Log ao Ticket{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto p-6">
+        <h1 class="text-4xl font-bold text-gray-900 mb-8">Adicionar Log para o Ticket: <span class="text-blue-600">{{ ticket.title }}</span></h1>
+
+        {% for message in app.flashes('success') %}
+            <div class="bg-green-100 text-green-700 p-4 mb-6 rounded-lg shadow-lg">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        <div class="bg-white p-8 rounded-xl shadow-xl mb-8 border-t-4 border-blue-500">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">Adicionar Novo Log</h2>
+
+            {{ form_start(form) }}
+
+            <div class="mb-6">
+                {{ form_label(form.action, 'Ação', {'label_attr': {'class': 'text-lg font-medium text-gray-700'}}) }}
+                <div class="mt-2">
+                    {{ form_widget(form.action, {
+                        'attr': {'class': 'w-full p-4 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out'}
+                    }) }}
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center mt-6">
+                <button type="submit" class="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transform transition-all duration-300 ease-in-out">
+                    Salvar Log
+                </button>
+                <a href="{{ path('app_ticket_show', {'id': ticket.id}) }}" class="text-blue-600 hover:text-blue-800 font-medium transition duration-200 ease-in-out">
+                    <i class="fas fa-arrow-left"></i> Voltar para o Ticket
+                </a>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+
+        <!-- Logs -->
+    {% if logs is not empty %}
+        <ul class="space-y-6">
+            {% for log in logs %}
+                <li class="bg-white p-4 rounded-lg shadow-md border border-gray-200 hover:bg-gray-50 transition duration-300 ease-in-out">
+                    <div class="flex justify-between items-center mb-3">
+                        {% if log.user %}
+                            <span class="text-lg font-semibold text-gray-800">{{ log.user.fullname }}</span>
+                        {% else %}
+                            <span class="text-sm text-gray-500 italic">Usuário não encontrado</span>
+                        {% endif %}
+                        <span class="text-sm text-gray-500">{{ log.createdAt|date('d/m/Y H:i') }}</span>
+                    </div>
+                    <div class="text-gray-600 mt-2">
+                        <p class="text-base leading-relaxed">{{ log.action }}</p>
+                    </div>
+                    <div class="mt-2">
+                        <span class="text-xs text-gray-400 italic">Alterado</span>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-center text-gray-500 text-lg">Nenhum log encontrado para este ticket.</p>
+    {% endif %}
+
+{% endblock %}

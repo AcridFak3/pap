@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ticket #{{ ticket.id }}{% endblock %}
+
+{% block body %}
+    {% set statusLabels = { 'P': 'Pending', 'W': 'Working', 'F': 'Finished' } %}
+    {% set priorityLabels = { 'L': 'Low', 'M': 'Medium', 'H': 'High' } %}
+    {% set status = ticket.status|upper %}
+    {% set priority = ticket.priority|upper %}
+
+    <div class="min-h-screen flex flex-col items-center justify-center space-y-6">
+
+        <div class="max-w-4xl w-full bg-white rounded-2xl shadow-md p-6">
+            <h1 class="text-2xl font-bold text-gray-900 text-center">Ticket #{{ ticket.id }}</h1>
+            <div class="border-t border-gray-300 pt-4">
+                <p class="text-sm text-gray-700"><strong>Title:</strong> {{ ticket.title }}</p>
+                <p class="text-sm text-gray-700"><strong>Description:</strong> {{ ticket.description }}</p>
+                <p class="text-sm text-gray-700"><strong>Status:</strong> {{ statusLabels[status] }}</p>
+                <p class="text-sm text-gray-700"><strong>Priority:</strong> {{ priorityLabels[priority] }}</p>
+                <p class="text-sm text-gray-700"><strong>Created At:</strong> {{ ticket.createdAt|date('d/m/Y H:i') }}</p>
+            </div>
+
+            <div class="mt-6 flex justify-center space-x-4">
+                <a href="{{ path('app_ticket_edit', {'id': ticket.id}) }}" class="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700">Edit</a>
+                {% if isAdmin or isStaff %}
+                <a href="{{ path('app_ticket_fix', {'id': ticket.id}) }}" class="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700">Fix</a>
+                {% endif %}
+                <a href="{{ path('app_ticket_all') }}" class="px-4 py-2 bg-gray-600 text-white rounded-lg shadow hover:bg-gray-700">Back</a>
+            </div>
+        </div>
+
+        <div class="max-w-4xl w-full bg-white rounded-2xl shadow-md p-6 flex flex-col">
+            <h3 class="text-lg font-medium text-gray-700 mb-4">Comments:</h3>
+
+           <div id="chat-box" class="h-80 overflow-y-auto bg-gray-100 p-4 rounded-lg">
+                {% for comment in ticket.comments %}
+                    <div class="mb-4 {% if comment.userId and comment.userId.id == app.user.id %}text-right{% endif %}">
+                        <div class="inline-block max-w-xs px-4 py-2 rounded-lg shadow-md
+                        {% if comment.userId and comment.userId.id == app.user.id %} bg-blue-500 text-white {% else %} bg-gray-300 text-gray-900 {% endif %}">
+                            {% if comment.userId %}
+                                {% set roles = comment.userId.roles %}
+                                {% set role = 'User' %}
+
+                                {% if 'ROLE_ADMIN' in roles %}
+                                    {% set role = 'Admin' %}
+                               {% elseif 'ROLE_STAFF' in roles %}
+                                    {% set role = 'Staff' %}
+                                {% elseif 'ROLE_SUPPORT' in roles %}
+                                    {% set role = 'Support' %}
+                                {% endif %}
+
+                                <p class="text-lg font-bold">{{ comment.userId.fullname }} <span class="text-sm text-gray-600">({{ role }})</span></p>
+                            {% else %}
+                                <p class="text-sm font-bold">Unknown User</p>
+                            {% endif %}
+                            <p class="text-md">{{ comment.comment }}</p>
+                            <p class="text-xs opacity-75">{{ comment.createdAt|date('H:i d/m/Y') }}</p>
+                        </div>
+                    </div>
+                {% else %}
+                    <p class="text-gray-500 text-center">No comment found.</p>
+                {% endfor %}
+            </div>
+
+            <div class="mt-4">
+                <h2 class="text-xl font-medium text-gray-700 mb-2">Add Comment</h2>
+                {{ form_start(form, {'attr': {'onsubmit': 'scrollToBottom()'}}) }}
+                <div class="flex space-x-2">
+                    {{ form_widget(form.comment, {
+                        'attr': {'class': 'w-full p-2 border border-gray-300 rounded-lg', 'placeholder': 'Escreva um comentário...'}
+                    }) }}
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+                        Send
+                    </button>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

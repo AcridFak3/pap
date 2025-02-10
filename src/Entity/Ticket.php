@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TicketRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -24,16 +26,34 @@ class Ticket
     private ?string $description = null;
 
     #[ORM\Column(length: 1)]
-    private ?string $status = 'P';
+    private ?string $status = 'p';
 
     #[ORM\Column(length: 1)]
-    private ?string $priority = 'B';
+    private ?string $priority = 'l';
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $created_at;
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updated_at = null;
+
+    /**
+     * @var Collection<int, Comment>
+     */
+    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'ticketId', cascade: ['remove'])]
+    private Collection $comments;
+
+    /**
+     * @var Collection<int, TicketLog>
+     */
+    #[ORM\OneToMany(targetEntity: TicketLog::class, mappedBy: 'ticket', cascade: ['remove'])]
+    private Collection $ticketLogs;
+
+    public function __construct()
+    {
+        $this->comments = new ArrayCollection();
+        $this->ticketLogs = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -120,6 +140,66 @@ class Ticket
     public function setUpdatedAt(?\DateTimeImmutable $updated_at): static
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comment>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): static
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setTicketId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): static
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getTicketId() === $this) {
+                $comment->setTicketId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TicketLog>
+     */
+    public function getTicketLogs(): Collection
+    {
+        return $this->ticketLogs;
+    }
+
+    public function addTicketLog(TicketLog $ticketLog): static
+    {
+        if (!$this->ticketLogs->contains($ticketLog)) {
+            $this->ticketLogs->add($ticketLog);
+            $ticketLog->setTicket($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTicketLog(TicketLog $ticketLog): static
+    {
+        if ($this->ticketLogs->removeElement($ticketLog)) {
+            // set the owning side to null (unless already changed)
+            if ($ticketLog->getTicket() === $this) {
+                $ticketLog->setTicket(null);
+            }
+        }
 
         return $this;
     }

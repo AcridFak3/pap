@@ -3,69 +3,72 @@
 {% block title %}All Tickets{% endblock %}
 
 {% block body %}
-    <div class="flex justify-center items-center min-h-screen ">
-        <div class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg ">
-            <h1 class="text-3xl font-bold text-center text-white mb-6">All Tickets</h1>
+    <div class="container mx-auto p-6 bg-gray-800 rounded-lg shadow-lg ">
+        <h1 class="text-3xl font-bold text-center text-white mb-6">All Tickets</h1>
 
-            {% set statusLabels = {
-                'P': 'Pending',
-                'W': 'Working',
-                'F': 'Finished'
-            } %}
+        {% if tickets is empty %}
+            <p class="text-center text-gray-600">No tickets found.</p>
+        {% else %}
+            {% set statusLabels = { 'P': 'Pending', 'W': 'Working', 'F': 'Finished' } %}
+            {% set priorityLabels = { 'L': 'Low', 'M': 'Medium', 'H': 'High' } %}
 
-            {% set priorityLabels = {
-                'L': 'Low',
-                'M': 'Medium',
-                'H': 'High'
-            } %}
+            <table class="min-w-full bg-gray-700 rounded-lg">
+                <thead>
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-white uppercase">ID</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-white uppercase">User</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-white uppercase">Title</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-white uppercase">Description</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-white uppercase">Status</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-white uppercase">Priority</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-white uppercase">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for ticket in tickets %}
+                    {% set status = ticket.status|upper %}
+                    {% set priority = ticket.priority|upper %}
 
-            {% if tickets is empty %}
-                <p class="text-center text-gray-600">No tickets found.</p>
-            {% else %}
-                <table class="min-w-full bg-gray-700 rounded-lg">
-                    <thead>
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-semibold text-white uppercase">ID</th>
-                        <th class="px-6 py-3 text-left text-xs font-semibold text-white uppercase">Title</th>
-                        <th class="px-6 py-3 text-left text-xs font-semibold text-white uppercase">Description</th>
-                        <th class="px-6 py-3 text-left text-xs font-semibold text-white uppercase">Status</th>
-                        <th class="px-6 py-3 text-left text-xs font-semibold text-white uppercase">Priority</th>
-                        <th class="px-6 py-3 text-left text-xs font-semibold text-white uppercase">Actions</th>
+                    <tr class="bg-gray-100 hover:bg-gray-200">
+                        <td class="px-6 py-4 text-sm text-gray-700">{{ ticket.id }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-700">{{ ticket.userId.fullname }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-700">{{ ticket.title }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-700">{{ ticket.description }}</td>
+
+                        {# Status Mapping #}
+                        <td class="px-6 py-4 text-sm font-semibold
+                            {% if status == 'P' %}text-yellow-500{% elseif status == 'W' %}text-blue-500{% elseif status == 'F' %}text-green-500{% endif %}">
+                            {{ statusLabels[status] | default('Unknown') }}
+                        </td>
+
+                        {# Priority Mapping #}
+                        <td class="px-6 py-4 text-sm font-semibold
+                            {% if priority == 'L' %}text-green-500{% elseif priority == 'M' %}text-yellow-500{% elseif priority == 'H' %}text-red-500{% endif %}">
+                            {{ priorityLabels[priority] | default('Unknown') }}
+                        </td>
+
+                        <td class="px-6 py-4 text-sm text-gray-700">
+                            <a href="{{ path('app_ticket_show', { 'id': ticket.id }) }}" class="px-3 py-1 bg-blue-500 text-white rounded-lg">View</a>
+                        </td>
                     </tr>
-                    </thead>
-                    <tbody>
-                    {% for ticket in tickets %}
-                        {# Garantir que o status e a prioridade estão em maiúsculas #}
-                        {% set status = ticket.status|upper %}
-                        {% set priority = ticket.priority|upper %}
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
 
-                        {# Apenas mostrar tickets com valores válidos #}
-                        {% if statusLabels[status] and priorityLabels[priority] %}
-                            <tr class="bg-gray-100 hover:bg-gray-200">
-                                <td class="px-6 py-4 text-sm text-gray-700">{{ ticket.id }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-700">{{ ticket.title }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-700">{{ ticket.description }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-700">
-                                    {{ statusLabels[status] }}
-                                </td>
-                                <td class="px-6 py-4 text-sm text-gray-700">
-                                    {{ priorityLabels[priority] }}
-                                </td>
-                                <td class="px-6 py-4 text-sm text-gray-700">
-                                    <a href="{{ path('app_ticket_show', { 'id': ticket.id }) }}" class="text-blue-500 hover:text-blue-700">View</a>
-                                    <a href="{{ path('app_ticket_edit', { 'id': ticket.id }) }}" class="text-yellow-500 hover:text-yellow-700">Edit</a>
-                                    <form action="{{ path('app_ticket_delete', { 'id': ticket.id }) }}" method="post" style="display:inline;">
-                                        <button type="submit" class="text-red-500 hover:text-red-700">Delete</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        {% endif %}
-                    {% endfor %}
-                    </tbody>
-                </table>
+        {# Exibição de links para as páginas #}
+        <div class="mt-4 flex justify-center space-x-2">
+            {% if currentPage > 1 %}
+                <a href="{{ path('app_ticket_all', { 'page': currentPage - 1 }) }}" class="px-4 py-2 bg-gray-600 text-white rounded-md">Previous</a>
             {% endif %}
 
+            {% for i in 1..totalPages %}
+                <a href="{{ path('app_ticket_all', { 'page': i }) }}" class="px-4 py-2 bg-gray-600 text-white rounded-md {% if i == currentPage %}bg-blue-500{% endif %}">{{ i }}</a>
+            {% endfor %}
 
+            {% if currentPage < totalPages %}
+                <a href="{{ path('app_ticket_all', { 'page': currentPage + 1 }) }}" class="px-4 py-2 bg-gray-600 text-white rounded-md">Next</a>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

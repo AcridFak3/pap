@@ -1,14 +1,14 @@
 <?php
 
+// src/Repository/TicketRepository.php
+
 namespace App\Repository;
 
 use App\Entity\Ticket;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\QueryBuilder;
 
-/**
- * @extends ServiceEntityRepository<Ticket>
- */
 class TicketRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -16,37 +16,19 @@ class TicketRepository extends ServiceEntityRepository
         parent::__construct($registry, Ticket::class);
     }
 
-    public function findById($userId): array
+    // Método para buscar todos os tickets
+    public function findAllTicketsQuery(): QueryBuilder
     {
         return $this->createQueryBuilder('t')
-            ->andWhere('t.userId = :userId')  // Agora é a relação de objetos
-            ->setParameter('userId', $userId)  // Definindo o ID do usuário
-            ->orderBy('t.id', 'ASC')  // Ordenação opcional, se precisar
-            ->getQuery()
-            ->getResult();
+            ->orderBy('t.created_at', 'DESC');
     }
-    //    /**
-    //     * @return Ticket[] Returns an array of Ticket objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('t')
-    //            ->andWhere('t.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('t.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
 
-    //    public function findOneBySomeField($value): ?Ticket
-    //    {
-    //        return $this->createQueryBuilder('t')
-    //            ->andWhere('t.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    // Método para buscar os tickets de um usuário específico
+    public function findByUserTicketsQuery($user): QueryBuilder
+    {
+        return $this->createQueryBuilder('t')
+            ->where('t.userId = :userId')
+            ->setParameter('userId', $user->getId())
+            ->orderBy('t.created_at', 'DESC');
+    }
 }

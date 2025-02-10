@@ -20,9 +20,22 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
     App\EventListener\TicketListener:
-            tags:
-                - { name: doctrine.event_listener, event: prePersist }
-                - { name: doctrine.event_listener, event: preUpdate }
-
+        tags:
+            - { name: doctrine.event_listener, event: prePersist }
+            - { name: doctrine.event_listener, event: preUpdate }
+    App\EventListener\UserListener:
+        tags:
+            - { name: doctrine.event_listener, event: prePersist }
+            - { name: doctrine.event_listener, event: preUpdate }
+    App\EventListener\CommentListener:
+        tags:
+            - { name: doctrine.event_listener, event: prePersist }
+    App\EventListener\TicketLogListener:
+        tags:
+            - { name: doctrine.event_listener, event: prePersist}
+    App\EventListener\AccessControlListener:
+        arguments: [ '@security.helper', '@router', '@request_stack' ]
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller }
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
